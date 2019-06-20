@@ -65,7 +65,7 @@ func run(c *cli.Context) error {
 		AccessKey:  c.String("accesskey"),
 		SecretKey:  c.String("secretkey"),
 		BucketName: c.String("bucket"),
-		LocalPath:  c.String("path"),
+		LocalPath:  path,
 	}
 
 	remoteFileMap, err := worker.RemoteFileMap(config)
@@ -92,7 +92,7 @@ func run(c *cli.Context) error {
 			fmt.Printf("\t\t FileName: %v, Fail Reason: %v \n", k, v)
 		}
 	} else {
-		printline("Download complete :)")
+		printline("Download complete :) \n")
 	}
 
 	return nil
