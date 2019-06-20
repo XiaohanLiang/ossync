@@ -14,9 +14,9 @@
 ## 安装与使用
 
 ### 安装它
-```
-go get -u https://github.com/XiaohanLiang/ossync
-```
+
+- 直接下载二进制包使用: [点这里](https://github.com/XiaohanLiang/ossync/releases)
+- 通过源码编译:  需要 `go version` > 1.11, 通过go mod下载aws-sdk-go
 
 ### 使用它
 
