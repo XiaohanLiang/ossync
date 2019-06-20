@@ -15,8 +15,10 @@
 
 ### 安装它
 
-- 直接下载二进制包使用: [点这里](https://github.com/XiaohanLiang/ossync/releases)
-- 通过源码编译:  需要 `go version` > 1.11, 通过go mod下载aws-sdk-go
+- <u>直接下载二进制包使用</u>: [点这里](https://github.com/XiaohanLiang/ossync/releases)
+- 通过源码编译:  
+  - 需要 `go version > 1.11` 并且 `GO111MODULE=on`
+  - 进入项目根目录执行 `go isntall main.go`
 
 ### 使用它
 
