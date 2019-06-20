@@ -46,3 +46,5 @@ ossync -e s3.cn-north-1.jdcloud-oss.com -r cn-north-1 -a ABC***AccessKey -s ABC*
   - 不喜欢主从模式
 - 为什么不用ETag或者MD5作为依据?
   - 本地依赖=文件夹 & 远程依赖=tar.gz
+- 我不是京东云可以吗? 
+  - 但凡支持AWS-SDK的OSS都可以哦
