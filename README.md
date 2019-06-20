@@ -49,4 +49,5 @@ ossync -e s3.cn-north-1.jdcloud-oss.com -r cn-north-1 -a ABC***AccessKey -s ABC*
 - 我不是京东云可以吗? 
   - 但凡支持AWS-SDK的OSS都可以哦
   
-[](forkandstar.jpeg)
+
+<div align=center><img width="200" height="200" src="forkandstar.jpeg"/></div>
