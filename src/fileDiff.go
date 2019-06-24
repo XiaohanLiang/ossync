@@ -46,7 +46,7 @@ func trimFileName(l map[string]string)map[string]string{
 
 	ret := map[string]string{}
 	for k,v := range l {
-		tk := strings.Split(k,".")[0]
+		tk := strings.TrimSuffix(k,".tar.gz")
 		ret[tk] = v
 	}
 	return ret
