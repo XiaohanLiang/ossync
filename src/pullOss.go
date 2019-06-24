@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"io"
 	"os"
-	"strings"
+	"path"
 )
 
 // Given a list of files, we will download them
@@ -62,41 +62,60 @@ func Download(nameMap map[string]string, c *Config) (map[string]string) {
 	return errors
 }
 
-func decompress(tarFile, dest string) (filename string,err error) {
-	srcFile, err := os.Open(tarFile)
-	if err != nil {
-		return "",err
-	}
-	defer srcFile.Close()
-	gr, err := gzip.NewReader(srcFile)
-	if err != nil {
-		return "",err
-	}
-	defer gr.Close()
-	tr := tar.NewReader(gr)
-	for {
-		hdr, err := tr.Next()
-		if err != nil {
-			if err == io.EOF {
-				break
-			} else {
-				return "",err
-			}
-		}
-		filename = dest + hdr.Name
-		file, err := createFile(filename)
-		if err != nil {
-			return "",err
-		}
-		io.Copy(file, tr)
-	}
-	return filename,nil
-}
+func decompress(srcFilePath string, destDirPath string) (ret string,err error){
 
-func createFile(name string) (*os.File, error) {
-	err := os.MkdirAll(string([]rune(name)[0:strings.LastIndex(name, "/")]), 0755)
+	fmt.Println("UnTarGzing " + srcFilePath + "...")
+	os.Mkdir(destDirPath, os.ModePerm)
+
+	fr, err := os.Open(srcFilePath)
 	if err != nil {
-		return nil, err
+		return "",fmt.Errorf("Failed in opening src file, reasons:%v",err)
 	}
-	return os.Create(name)
+	defer fr.Close()
+
+	// 使用Gzip工具打开压缩文件
+	gr, err := gzip.NewReader(fr)
+	if err != nil {
+		return "",fmt.Errorf("Failed in opening with Gzip tool, reasons:%v",err)
+	}
+
+	// 使用Tar工具打开包
+	tr := tar.NewReader(gr)
+
+	folderName := true
+
+	for {
+
+		hdr, err := tr.Next()
+		if folderName {
+			ret = destDirPath + "/" + hdr.Name
+			folderName = false
+		}
+		// EOF出现说明文件已经读完
+		if err == io.EOF {
+			break
+		}
+
+		fmt.Println("解压文件 -> file..." + hdr.Name)
+
+		// 被装在包里的除了实际的文件还有文件夹, 但是文件夹不在解压范围内
+		// 所以我们需要确保, 必须是文件,我们再开始解压, 写入
+		if hdr.Typeflag != tar.TypeDir {
+
+			os.MkdirAll(destDirPath+"/"+path.Dir(hdr.Name), os.ModePerm)
+			fw, err := os.Create(destDirPath + "/" + hdr.Name)
+
+			if err != nil {
+				return "",fmt.Errorf("Failed in creating path,reasons:%v",err)
+			}
+
+			_, err = io.Copy(fw, tr)
+			if err != nil {
+				return "", fmt.Errorf("Failed in copying files,reasons:%v",err)
+			}
+
+		}
+	}
+	fmt.Println("Well done!")
+	return
 }
