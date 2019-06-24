@@ -114,6 +114,10 @@ func decompress(srcFilePath string, destDirPath string) (ret string,err error){
 				return "", fmt.Errorf("Failed in copying files,reasons:%v",err)
 			}
 
+			// 创建文件必须关闭,否则分分钟 too many open files
+			if e := fw.Close(); e != nil {
+				fmt.Printf("Failed in closing created files,reasons:%v",e.Error())
+			}
 		}
 	}
 	fmt.Println("Well done!")
